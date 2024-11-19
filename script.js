@@ -1,68 +1,119 @@
-let taskList = [];
+let taskList = [
+  {
+    id: 1731980115185,
+    check: false,
+    name: 'Sleep',
+  },
+  {
+    id: 1731980163371,
+    check: false,
+    name: 'Buy milk',
+  },
+];
 
-function addTask() {
-  let newTask = document.querySelector(".input").value;
-  let newTaskDOm = document.querySelector(".bottom-input");
-  let taskHtml = ""
-  let addNewTask = taskList.push(newTask);
+// Elements we need to reference
+const form = document.querySelector('#form');
+const taskListElem = document.querySelector('#taskList');
 
-
-  taskList.forEach((taskList) =>{
-    
-  
-    
-    
-    taskHtml += `
-
-     <div class="task-div">
-        <div class="task-thing checkbox"><input type="checkbox"></div>
-        
-        <div class="task-thing task-text">${taskList} </div> 
-        
-        <div class="task-thing delete" onclick="deleteTask">X</div>
-      </div>
-  `
-  
-  newTaskDOm.innerHTML=taskHtml;
-    
-  })
-  
-  console.log(taskList);
-  
+// We have no local storage yet
+if (!localStorage.getItem('tasks')) {
+  // This creates a new local storage with some tasks
+  localStorage.setItem('tasks', JSON.stringify(taskList));
 }
 
+// Create
+form.onsubmit = (e) => {
+  // Prevent to reload page
+  e.preventDefault();
 
+  // This is an object to get the fields
+  const formData = new FormData(e.currentTarget);
 
-
-
-function clickEnter() {
-  let input = document.querySelector(".input")
-  
-  input.addEventListener("keypress", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      document.querySelector(".add").click();
-    }
+  // Add item at beginning of array
+  taskList.unshift({
+    id: new Date(),
+    check: false,
+    name: formData.get('name'),
   });
-  console.log("balls");
-}
 
+  saveTasks();
+  render();
 
+  // Reset form
+  e.currentTarget.reset();
+};
 
-clickEnter();
-  
+// Set the event listener on the parent page since the children are rendered with JS
+taskListElem.onclick = (e) => {
+  // Find the closest parent element where the ID attr. is located
+  const parent = e.target.closest('.task-div');
+  const id = parent.dataset.id;
 
+  // Find item by index
+  const itemIndex = taskList.findIndex((task) => task.id == id);
 
-  
-function noTaskWarning(taskList) {
-  const empty = "";
-  if(taskList == empty) {
-    alert("add task")
+  // Update
+  // Check if the elem. clicked is a checkbox
+  if (e.target.type === 'checkbox') {
+    taskList[itemIndex].check = e.target.checked;
   }
+
+  // Delete
+  // Check if the elem. clicked has a class of button
+  if (e.target.classList.contains('delete')) {
+    taskList = taskList.filter((task) => task.id != id);
+  }
+
+  saveTasks();
+  render();
+};
+
+function render() {
+  // Get the tasks from local storage every time we render
+  taskList = JSON.parse(localStorage.getItem('tasks'));
+
+  const taskHtml = taskList.map((task) => {
+    return `
+      <div class="task-div" data-id="${task.id}">
+        <div class="task-thing checkbox">
+          <input type="checkbox" ${task.check ? 'checked' : ''}>
+        </div>
+        <div class="task-thing task-text" style="${
+          task.check ? 'text-decoration:line-through' : ''
+        }">${task.name}</div> 
+        <div class="task-thing delete">&times;</div>
+      </div>
+    `;
+  });
+
+  // Join the array of strings into 1 string to set it in the DOM
+  taskListElem.innerHTML = taskHtml.join('');
+}
+render();
+
+// Save the tasks in local storage
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(taskList));
 }
 
-noTaskWarning();
+/**
+ * Global scope
+ */
+// const date = '';
+// function drive() {
+//   stop()
+// }
+// function stop() {
+//   console.log(date)
+// }
 
-
-
-addTask();
+/**
+ * Local scope
+ */
+// function drive() {
+//   const date = '';
+//   stop(date)
+// }
+// function stop(date) {
+//   console.log(date)
+// }

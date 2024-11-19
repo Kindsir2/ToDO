@@ -2,49 +2,30 @@
 <html>
   <head>
     <title>Todo-List</title>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="top-div">
-        <div class="title">Todo</div>
+      <div class="title">Todo</div>
     </div>
 
-    <div class="middle-div">
-      
-        <input type="text" placeholder="Add your task" class="input">
-        <div class="add-div"><button class="add" onclick="addTask()">Add</button></div>
+    <form id="form" class="middle-div" method="post">
+      <input
+        name="name"
+        type="text"
+        placeholder="Add your task"
+        class="input"
+        required
+      />
+      <div class="add-div">
+        <button class="add" type="submit">Add</button>
       </div>
+    </form>
+
+    <div class="bottom-wrapper">
+      <div id="taskList" class="bottom-input"></div>
     </div>
 
-  <div class="bottom-wrapper">  
-    <div class="bottom-input">
-      
-
-      <div class="task-div">
-        <div class="task-thing checkbox"><input type="checkbox"></div>
-        
-        <div class="task-thing task-text">clean house </div> 
-        
-        <button class="task-thing delete">X</button>
-      </div>
-
-      <div class="task-div">
-        <div class="task-thing checkbox"><input type="checkbox"></div>
-        
-        <div class="task-thing task-text">slap a mf </div> 
-        
-        <button class="task-thing delete">X</button>
-      </div>
-
-      
-
-      
-      
-    </div>
-    
-    
-    </div>
-
+    <script src="script.js"></script>
   </body>
 </html>
