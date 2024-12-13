@@ -47,6 +47,7 @@ body{
   color: white;
   font-weight: bold;
   font-size: large;
+  cursor: pointer;
 }
 
 .add-button:hover{
@@ -140,6 +141,7 @@ input[type="date"]{
   background-color: red;
   font-size: large;
   color: white;
+  cursor: pointer;
 }
 
 .delete:hover{
